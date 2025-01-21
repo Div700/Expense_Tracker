@@ -1,10 +1,11 @@
+import 'package:expense_tracker/models/enums/category_enum.dart';
 import 'package:expense_tracker/models/expense.dart';
 import 'package:flutter/material.dart';
 
 class NewExpense extends StatefulWidget{
 
   const NewExpense({super.key,required this.addExpense});
-  final void Function (Expense) addExpense;
+  final void Function (Map<String,dynamic>) addExpense;
   
   @override
   State<NewExpense> createState() {
@@ -64,12 +65,21 @@ class _NewExpenseState extends State<NewExpense>{
       return;
     }
     Navigator.pop(context);
-    widget.addExpense(Expense(
-      title: _titleController.text,
-      amount: entered_amount,
-      date: _selectedDate!,
-      category: _selectedCategory
-    ));
+    widget.addExpense(
+      {
+        'title' : _titleController.text,
+        'amount' : entered_amount,
+        'date' : _selectedDate,
+        'category' : _selectedCategory.toString().split('.').last,  // Serialize category
+      }
+    );
+    // widget.addExpense(Expense(
+    
+    //   title: _titleController.text,
+    //   amount: entered_amount,
+    //   date: _selectedDate!,
+    //   category: _selectedCategory
+    // ));
     //adding the expenses in the list
   }
 
@@ -124,7 +134,7 @@ class _NewExpenseState extends State<NewExpense>{
               return;
               setState(() 
               {
-                 _selectedCategory = value as Category;
+                 _selectedCategory = value as Category; //removed unnecessary casting
               });
             }),
             Spacer(),
